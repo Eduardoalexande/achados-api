@@ -1,0 +1,2381 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACHADOS — Plataforma de Pessoas Desaparecidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #03080f;
+    --bg2: #060e1a;
+    --bg3: #0a1628;
+    --surface: #0d1f35;
+    --surface2: #112540;
+    --border: #1a3354;
+    --accent: #1a6fba;
+    --accent2: #2180d0;
+    --blue: #4da3f5;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --text: #e8f0f8;
+    --muted: #6a85a0;
+    --muted2: #3a5570;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── AUTH SCREEN ── */
+  #auth-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 30% 50%, #021428 0%, var(--bg) 60%),
+                radial-gradient(ellipse at 80% 20%, #0a2040 0%, transparent 50%);
+    position: relative;
+  }
+
+  #auth-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #2a3449 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  .auth-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px;
+    width: 420px;
+    position: relative;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(26,111,186,0.15);
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+
+  .auth-logo h1 {
+    font-family: var(--font-head);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .auth-tabs {
+    display: flex;
+    background: var(--bg2);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 28px;
+  }
+
+  .auth-tab {
+    flex: 1;
+    padding: 9px;
+    text-align: center;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+  }
+
+  .auth-tab.active {
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    color: white;
+  }
+
+  .form-group { margin-bottom: 18px; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 7px;
+  }
+
+  input[type=text], input[type=email], input[type=password], input[type=tel], select, textarea {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(26,111,186,0.15);
+  }
+
+  select option { background: var(--bg2); }
+
+  .btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: none;
+    font-family: var(--font-head);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 20px rgba(26,111,186,0.35);
+  }
+
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 6px 25px rgba(26,111,186,0.45); }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-sm {
+    width: auto;
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .btn-danger { background: var(--red); color: white; }
+  .btn-success { background: var(--green); color: white; }
+  .btn-blue { background: var(--blue); color: white; }
+
+  /* ── APP LAYOUT ── */
+  #app { display: none; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 240px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    padding: 20px 0;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-logo .logo-icon { width: 36px; height: 36px; font-size: 18px; border-radius: 9px; }
+  .sidebar-logo h2 { font-family: var(--font-head); font-size: 20px; font-weight: 800; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 20px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+
+  .nav-item.active {
+    color: var(--blue);
+    background: rgba(26,111,186,0.1);
+    border-left-color: var(--accent);
+  }
+
+  .nav-icon { font-size: 18px; width: 20px; text-align: center; }
+
+  .nav-section {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted2);
+    padding: 16px 20px 6px;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .user-info { flex: 1; overflow: hidden; }
+  .user-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-role { font-size: 11px; color: var(--muted); }
+
+  /* MAIN */
+  .main {
+    margin-left: 240px;
+    min-height: 100vh;
+    background: var(--bg);
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: rgba(3,8,15,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+  }
+
+  .topbar h2 { font-family: var(--font-head); font-size: 20px; font-weight: 700; }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .badge-orange { background: rgba(26,111,186,0.15); color: var(--blue); border: 1px solid rgba(26,111,186,0.3); }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .badge-blue { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .badge-yellow { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+
+  .content { padding: 32px; }
+
+  /* PAGES */
+  .page { display: none; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--blue); box-shadow: 0 4px 20px rgba(26,111,186,0.15); }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    opacity: 0.08;
+    transform: translate(20px, -20px);
+  }
+
+  .stat-card.orange::before { background: var(--accent); }
+  .stat-card.blue::before { background: var(--blue); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.red::before { background: var(--red); }
+
+  .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .stat-value { font-family: var(--font-head); font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+  .stat-sub { font-size: 12px; color: var(--muted); }
+
+  .stat-icon { font-size: 28px; margin-bottom: 12px; }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+  }
+
+  .person-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+
+  .person-card:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(26,111,186,0.2); }
+
+  .person-photo {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px;
+    color: var(--muted2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .person-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+  .photo-status {
+    position: absolute;
+    top: 10px; right: 10px;
+  }
+
+  .person-info { padding: 16px; }
+  .person-name { font-family: var(--font-head); font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .person-meta { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .person-actions { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+
+  /* ALERTS */
+  .alert-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: all 0.2s;
+    animation: slideIn 0.4s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .alert-card.urgent { border-left: 3px solid var(--red); }
+  .alert-card.match { border-left: 3px solid var(--green); }
+  .alert-card.info { border-left: 3px solid var(--blue); }
+
+  .alert-icon { font-size: 24px; flex-shrink: 0; }
+  .alert-content { flex: 1; }
+  .alert-title { font-family: var(--font-head); font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .alert-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .alert-time { font-size: 11px; color: var(--muted2); margin-top: 6px; }
+
+  /* ESP32 PANEL */
+  .esp-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .esp-header {
+    background: var(--bg2);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .esp-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
+  .connection-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 2s infinite;
+  }
+
+  .connection-dot.connected { background: var(--green); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .esp-body { padding: 20px; }
+
+  .esp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .sensor-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .sensor-box.active { border-color: var(--green); background: rgba(34,197,94,0.05); }
+  .sensor-box.scanning { border-color: var(--yellow); background: rgba(234,179,8,0.05); animation: scanPulse 1.5s infinite; }
+
+  @keyframes scanPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(234,179,8,0.2); }
+    50% { box-shadow: 0 0 0 8px rgba(234,179,8,0); }
+  }
+
+  .sensor-icon { font-size: 36px; margin-bottom: 10px; }
+  .sensor-name { font-family: var(--font-head); font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .sensor-status { font-size: 12px; color: var(--muted); }
+
+  /* LOG */
+  .log-box {
+    background: #060810;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    max-height: 220px;
+    overflow-y: auto;
+    line-height: 1.8;
+  }
+
+  .log-line { margin-bottom: 2px; }
+  .log-time { color: var(--muted2); }
+  .log-ok { color: var(--green); }
+  .log-warn { color: var(--yellow); }
+  .log-err { color: var(--red); }
+  .log-info { color: var(--blue); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .modal-head {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-head h3 { font-family: var(--font-head); font-size: 18px; font-weight: 700; }
+
+  .modal-close {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .modal-close:hover { color: var(--text); border-color: var(--text); }
+
+  .modal-body { padding: 24px 28px; }
+  .modal-footer { padding: 16px 28px 24px; display: flex; gap: 10px; }
+
+  /* UPLOAD */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 18px;
+  }
+
+  .upload-zone:hover { border-color: var(--accent); background: rgba(26,111,186,0.04); }
+  .upload-zone.has-image { border-color: var(--green); }
+
+  .upload-icon { font-size: 40px; margin-bottom: 10px; }
+  .upload-text { font-size: 13px; color: var(--muted); }
+
+  #upload-preview { width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; display: none; }
+
+  /* NOTIFICATION TOAST */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+
+  .toast-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    min-width: 300px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    pointer-events: auto;
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(60px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .toast-match { border-left: 3px solid var(--green); }
+  .toast-alert { border-left: 3px solid var(--red); }
+  .toast-info { border-left: 3px solid var(--blue); }
+
+  .toast-icon { font-size: 20px; }
+  .toast-title { font-family: var(--font-head); font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .toast-desc { font-size: 12px; color: var(--muted); }
+
+  /* MAP PLACEHOLDER */
+  .map-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  /* SEARCH BAR */
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .search-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 16px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,111,186,0.12); }
+
+  /* ESP API DOCS */
+  .api-endpoint {
+    background: #060810;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+  }
+
+  .method { display: inline-block; padding: 2px 8px; border-radius: 5px; font-weight: 700; margin-right: 10px; font-size: 11px; }
+  .method-post { background: rgba(34,197,94,0.2); color: var(--green); }
+  .method-get { background: rgba(59,130,246,0.2); color: var(--blue); }
+
+  .endpoint-url { color: var(--accent); font-size: 13px; }
+  .endpoint-desc { color: var(--muted); font-size: 11px; margin-top: 6px; }
+
+  /* MATCH RESULT */
+  .match-result {
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .match-avatar { width: 60px; height: 60px; border-radius: 10px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 28px; border: 2px solid var(--green); flex-shrink: 0; }
+  .match-info { flex: 1; }
+  .match-name { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+  .match-detail { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .match-confidence { font-family: var(--font-head); font-size: 24px; font-weight: 800; color: var(--green); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* FORM GRID */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-full { grid-column: 1 / -1; }
+
+  /* API INPUT */
+  .api-url-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+  }
+
+  .api-url-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .api-url-val { font-family: 'Courier New', monospace; font-size: 13px; color: var(--accent); flex: 1; }
+
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  .section-title {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* ── BOTTOM NAV MOBILE ── */
+  .bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    z-index: 200;
+    padding: 0 4px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .bottom-nav-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 58px;
+  }
+
+  .bnav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--font-head);
+    letter-spacing: 0.2px;
+    transition: all 0.2s;
+    flex: 1;
+    border: none;
+    background: transparent;
+    position: relative;
+  }
+
+  .bnav-item.active { color: var(--accent); }
+  .bnav-item .bnav-icon { font-size: 20px; line-height: 1; }
+
+  .bnav-dot {
+    position: absolute;
+    top: 6px; right: calc(50% - 16px);
+    width: 7px; height: 7px;
+    background: var(--red);
+    border-radius: 50%;
+    border: 2px solid var(--bg2);
+  }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+
+  /* SIDEBAR OVERLAY */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 90;
+  }
+
+  .sidebar-overlay.open { display: block; }
+
+  /* ── TABLET 768–1024 ── */
+  @media (max-width: 1024px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    #page-dashboard > div[style*="grid-template-columns"] {
+      display: block !important;
+    }
+    #page-dashboard > div > div:last-child { margin-top: 24px; }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+
+    /* Auth box */
+    .auth-box {
+      width: 94vw;
+      padding: 28px 20px;
+      border-radius: 16px;
+    }
+
+    /* Sidebar — slides in from left */
+    .sidebar {
+      width: 260px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+
+    .sidebar.open { transform: translateX(0); }
+
+    /* Main fills full width */
+    .main { margin-left: 0; padding-bottom: 70px; }
+
+    /* Topbar */
+    .topbar { padding: 12px 16px; gap: 10px; }
+    .topbar h2 { font-size: 17px; }
+    .topbar-right { gap: 8px; }
+    #esp-status-badge { display: none; }
+
+    .hamburger { display: block; }
+
+    /* Content padding */
+    .content { padding: 16px; }
+
+    /* Stats */
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 18px; }
+    .stat-value { font-size: 26px; }
+    .stat-card { padding: 14px; }
+    .stat-icon { font-size: 22px; margin-bottom: 8px; }
+
+    /* Dashboard grid → single column */
+    #page-dashboard > div[style*="grid"] {
+      display: flex !important;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Cards */
+    .cards-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    #dash-recent-cards { grid-template-columns: 1fr 1fr !important; }
+
+    /* Search bar */
+    .search-bar { flex-wrap: wrap; }
+    .search-bar select { flex: 1; }
+
+    /* ESP grid */
+    .esp-grid { grid-template-columns: 1fr; gap: 12px; }
+
+    /* ESP header */
+    .esp-header { flex-wrap: wrap; gap: 10px; }
+    .esp-header > div:last-child { width: 100%; justify-content: flex-start; }
+
+    /* API url bar */
+    .api-url-bar { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .api-url-val { font-size: 11px; word-break: break-all; }
+
+    /* Form grid */
+    .form-grid { grid-template-columns: 1fr; }
+    .form-full { grid-column: auto; }
+
+    /* Modal */
+    .modal { width: 96vw; margin: 0 auto; border-radius: 14px; }
+    .modal-head { padding: 18px 20px 14px; }
+    .modal-body { padding: 16px 20px; }
+    .modal-footer { padding: 12px 20px 20px; }
+
+    /* Match result */
+    .match-result { flex-wrap: wrap; }
+
+    /* Toast */
+    #toast { left: 12px; right: 12px; bottom: 72px; }
+    .toast-item { min-width: unset; width: 100%; }
+
+    /* Person card */
+    .person-photo { height: 160px; }
+    .person-name { font-size: 14px; }
+
+    /* Bottom nav */
+    .bottom-nav { display: block; }
+
+    /* Log box */
+    .log-box { font-size: 11px; }
+
+    /* Topbar publish button — smaller */
+    .topbar-right .btn { padding: 8px 12px; font-size: 12px; }
+
+    /* Dash ESP status */
+    #dash-esp-status { padding: 14px; }
+
+    /* Section titles */
+    .section-title { font-size: 15px; }
+
+    /* ESP panel btns */
+    .esp-body > div[style*="flex"] { flex-wrap: wrap; }
+  }
+
+  /* Very small phones */
+  @media (max-width: 380px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    #dash-recent-cards { grid-template-columns: 1fr !important; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .auth-box { padding: 22px 16px; }
+    .bnav-item { padding: 6px 6px; font-size: 9px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH ── -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="logo-icon">🔍</div>
+      <h1>ACHADOS</h1>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6">Plataforma colaborativa de localização de pessoas desaparecidas com reconhecimento biométrico.</p>
+    
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
+      <button class="auth-tab" onclick="switchTab('register')">Registar</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="exemplo@email.com" value="demo@achados.pt">
+      </div>
+      <div class="form-group">
+        <label>Palavra-passe</label>
+        <input type="password" id="login-pass" placeholder="••••••••" value="demo123">
+      </div>
+      <button class="btn btn-primary" onclick="doLogin()">Entrar na plataforma</button>
+      <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:16px">Demo: demo@achados.pt / demo123</p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label>Nome completo</label>
+        <input type="text" id="reg-name" placeholder="João Silva">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="joao@email.com">
+      </div>
+      <div class="form-group">
+        <label>Tipo de conta</label>
+        <select id="reg-type" onchange="toggleAuthCode(this.value)">
+          <option value="citizen">Cidadão</option>
+          <option value="police">Esquadra / Autoridade Policial</option>
+          <option value="hospital">Hospital / Saúde</option>
+          <option value="ngo">ONG / Voluntário</option>
+        </select>
+      </div>
+      <div class="form-group" id="auth-code-group" style="display:none">
+        <label>Código de Acesso Institucional 🔐</label>
+        <input type="password" id="reg-auth-code" placeholder="Código fornecido pela instituição">
+        <div style="font-size:11px;color:var(--muted);margin-top:5px">⚠️ Código fornecido pela sua instituição. Necessário para aceder à área restrita.</div>
+      </div>
+      <div class="form-group">
+        <label>Palavra-passe</label>
+        <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres">
+      </div>
+      <button class="btn btn-primary" onclick="doRegister()">Criar conta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🔍</div>
+      <h2>ACHADOS</h2>
+    </div>
+
+    <div class="nav-section">Principal</div>
+    <a class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a class="nav-item" onclick="showPage('missing')">
+      <span class="nav-icon">👤</span> Pessoas Desaparecidas
+    </a>
+    <a class="nav-item" onclick="showPage('alerts')">
+      <span class="nav-icon">🔔</span> Alertas <span class="badge badge-red" style="margin-left:auto" id="alert-badge">3</span>
+    </a>
+
+    <div class="nav-section">Sistema</div>
+    <a class="nav-item" onclick="showPage('esp32')">
+      <span class="nav-icon">🤖</span> Painel ESP32
+    </a>
+    <a class="nav-item" onclick="showPage('matches')">
+      <span class="nav-icon">✅</span> Correspondências
+    </a>
+    <a class="nav-item" onclick="showPage('api')">
+      <span class="nav-icon">🔌</span> API / Integração
+    </a>
+
+    <div class="nav-section authority-only" id="nav-private-section" style="display:none">Área Restrita 🔒</div>
+    <a class="nav-item authority-only" id="nav-private" onclick="showPage('private')" style="display:none">
+      <span class="nav-icon">🔒</span> Casos Confidenciais
+    </a>
+    <a class="nav-item authority-only" id="nav-authority-dash" onclick="showPage('authority')" style="display:none">
+      <span class="nav-icon">🛡️</span> Painel de Autoridade
+    </a>
+
+    <div class="sidebar-bottom">
+      <div class="user-pill">
+        <div class="avatar" id="sidebar-avatar">D</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-name">Demo User</div>
+          <div class="user-role" id="sidebar-role">Cidadão</div>
+        </div>
+        <span onclick="doLogout()" title="Sair" style="cursor:pointer;color:var(--muted);font-size:18px">⏏</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR OVERLAY (mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+        <h2 id="page-title">Dashboard</h2>
+      </div>
+      <div class="topbar-right">
+        <span class="badge badge-orange" id="server-badge" style="cursor:pointer" title="Configurar servidor" onclick="openServerConfig()">⏳ A verificar...</span>
+        <span class="badge badge-green" id="esp-status-badge" style="display:none">● ESP32</span>
+        <button class="btn btn-primary btn-sm" onclick="openModal('publish-modal')">+ Publicar</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card orange">
+            <div class="stat-icon">👥</div>
+            <div class="stat-label">Desaparecidos Activos</div>
+            <div class="stat-value" id="stat-active">47</div>
+            <div class="stat-sub">+3 esta semana</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon">✅</div>
+            <div class="stat-label">Encontrados</div>
+            <div class="stat-value">182</div>
+            <div class="stat-sub">Taxa: 79%</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon">🤖</div>
+            <div class="stat-label">Scans Biométricos</div>
+            <div class="stat-value" id="stat-scans">1.2k</div>
+            <div class="stat-sub">Hoje: 24</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-label">Alertas Pendentes</div>
+            <div class="stat-value">3</div>
+            <div class="stat-sub">Requerem atenção</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px">
+          <!-- Recent missing -->
+          <div>
+            <div class="section-title">⚠️ Casos Recentes</div>
+            <div id="dash-recent-cards" class="cards-grid" style="grid-template-columns:repeat(2,1fr)"></div>
+          </div>
+
+          <!-- Recent alerts -->
+          <div>
+            <div class="section-title">🔔 Alertas Recentes</div>
+            <div id="dash-alerts"></div>
+
+            <div class="section-title" style="margin-top:24px">🤖 ESP32 — Status</div>
+            <div class="sensor-box" id="dash-esp-status" style="text-align:left;display:flex;align-items:center;gap:14px">
+              <span style="font-size:36px">🔌</span>
+              <div>
+                <div class="sensor-name">Dispositivo Offline</div>
+                <div class="sensor-status">Aguardando conexão do ESP32...</div>
+                <div style="margin-top:8px"><button class="btn btn-secondary btn-sm" onclick="simulateESPConnect()">Simular Conexão</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MISSING PERSONS -->
+      <div class="page" id="page-missing">
+        <div class="search-bar">
+          <input class="search-input" type="text" placeholder="🔍  Pesquisar por nome, idade, local..." oninput="filterCards(this.value)">
+          <select style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none">
+            <option>Todos</option>
+            <option>Criança</option>
+            <option>Adulto</option>
+            <option>Idoso</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('publish-modal')">+ Publicar</button>
+        </div>
+        <div id="all-cards" class="cards-grid"></div>
+      </div>
+
+      <!-- ALERTS -->
+      <div class="page" id="page-alerts">
+        <div class="section-title">⚡ Alertas do Sistema</div>
+        <div id="alerts-list"></div>
+      </div>
+
+      <!-- ESP32 PANEL -->
+      <div class="page" id="page-esp32">
+        <div class="esp-panel">
+          <div class="esp-header">
+            <div class="esp-title">
+              <div class="connection-dot" id="esp-dot"></div>
+              ESP32 — Painel de Controlo Biométrico
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="badge badge-blue" id="esp-ip">IP: ---.---.---</span>
+              <button class="btn btn-secondary btn-sm" onclick="simulateESPConnect()" id="esp-connect-btn">Ligar Dispositivo</button>
+            </div>
+          </div>
+          <div class="esp-body">
+            <div class="api-url-bar">
+              <span class="api-url-label">ENDPOINT ESP32 →</span>
+              <span class="api-url-val">http://&lt;IP_ESP32&gt;/api/scan</span>
+            </div>
+
+            <div class="esp-grid">
+              <div class="sensor-box" id="sensor-face">
+                <div class="sensor-icon">👁️</div>
+                <div class="sensor-name">Reconhecimento Facial</div>
+                <div class="sensor-status" id="face-status">Inactivo</div>
+              </div>
+              <div class="sensor-box" id="sensor-finger">
+                <div class="sensor-icon">☝️</div>
+                <div class="sensor-name">Impressão Digital</div>
+                <div class="sensor-status" id="finger-status">Inactivo</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-bottom:16px">
+              <button class="btn btn-secondary btn-sm" onclick="simulateFaceScan()">Simular Scan Facial</button>
+              <button class="btn btn-secondary btn-sm" onclick="simulateFingerScan()">Simular Impressão Digital</button>
+              <button class="btn btn-primary btn-sm" onclick="simulateMatch()">⚡ Simular Correspondência</button>
+            </div>
+
+            <div class="section-title" style="font-size:14px;margin-bottom:10px">📟 Log do Sistema</div>
+            <div class="log-box" id="esp-log">
+              <div class="log-line"><span class="log-time">[00:00:00]</span> Sistema iniciado. Aguardando ESP32...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="esp-panel">
+          <div class="esp-header">
+            <div class="esp-title">📡 Como Ligar o ESP32</div>
+          </div>
+          <div class="esp-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">O ESP32 deve enviar dados via HTTP POST para este servidor. Abaixo o código para o ESP32:</p>
+            <div class="log-box" style="max-height:300px;color:#a8d8a8">
+<span style="color:#7a8499">// Código ESP32 — Enviar scan para o site</span>
+<span style="color:#fb923c">#include</span> &lt;WiFi.h&gt;
+<span style="color:#fb923c">#include</span> &lt;HTTPClient.h&gt;
+
+<span style="color:#7a8499">// Configuração WiFi</span>
+<span style="color:#3b82f6">const char*</span> ssid = <span style="color:#22c55e">"SEU_WIFI"</span>;
+<span style="color:#3b82f6">const char*</span> password = <span style="color:#22c55e">"SUA_SENHA"</span>;
+<span style="color:#3b82f6">const char*</span> serverUrl = <span style="color:#22c55e">"http://SEU_SERVIDOR/api/biometric"</span>;
+
+<span style="color:#3b82f6">void</span> sendBiometricData(<span style="color:#3b82f6">String</span> type, <span style="color:#3b82f6">String</span> data) {
+  HTTPClient http;
+  http.begin(serverUrl);
+  http.addHeader(<span style="color:#22c55e">"Content-Type"</span>, <span style="color:#22c55e">"application/json"</span>);
+  
+  <span style="color:#3b82f6">String</span> payload = <span style="color:#22c55e">"{"</span>
+    <span style="color:#22c55e">'"type":"'</span> + type + <span style="color:#22c55e">'",'</span>
+    <span style="color:#22c55e">'"data":"'</span> + data + <span style="color:#22c55e">'",'</span>
+    <span style="color:#22c55e">'"location":"Esquadra PSP Lisboa",'</span>
+    <span style="color:#22c55e">'"timestamp":'</span> + String(millis()) +
+  <span style="color:#22c55e">"}"</span>;
+  
+  <span style="color:#3b82f6">int</span> code = http.POST(payload);
+  <span style="color:#7a8499">// code 200 = correspondência encontrada</span>
+  <span style="color:#7a8499">// code 404 = sem correspondência</span>
+  http.end();
+}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATCHES -->
+      <div class="page" id="page-matches">
+        <div class="section-title">✅ Correspondências Encontradas</div>
+        <div id="matches-list"></div>
+        <div style="text-align:center;padding:40px;color:var(--muted)" id="no-matches">
+          <div style="font-size:48px;margin-bottom:12px">🔍</div>
+          <p>Nenhuma correspondência ainda.<br>Quando o ESP32 detectar alguém, aparece aqui.</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:16px" onclick="simulateMatch()">Simular Correspondência</button>
+        </div>
+      </div>
+
+      <!-- API -->
+      <div class="page" id="page-api">
+        <div class="section-title">🔌 Documentação da API</div>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.7">Endpoints disponíveis para integração com o ESP32 e outros sistemas electrónicos.</p>
+
+        <div class="api-endpoint">
+          <span class="method method-post">POST</span><span class="endpoint-url">/api/biometric</span>
+          <div class="endpoint-desc">Recebe dados biométricos do ESP32 (facial ou digital) e compara com a base de dados</div>
+          <div style="margin-top:10px;color:#7a8499">Body: { "type": "face|fingerprint", "data": "base64_data", "location": "nome_local", "device_id": "ESP32_001" }</div>
+        </div>
+
+        <div class="api-endpoint">
+          <span class="method method-get">GET</span><span class="endpoint-url">/api/missing</span>
+          <div class="endpoint-desc">Retorna lista de todas as pessoas desaparecidas activas</div>
+        </div>
+
+        <div class="api-endpoint">
+          <span class="method method-post">POST</span><span class="endpoint-url">/api/missing</span>
+          <div class="endpoint-desc">Publica uma nova pessoa desaparecida</div>
+          <div style="margin-top:10px;color:#7a8499">Body: { "name": "...", "age": 0, "description": "...", "photo": "base64", "location": "...", "contact": "..." }</div>
+        </div>
+
+        <div class="api-endpoint">
+          <span class="method method-post">POST</span><span class="endpoint-url">/api/alert</span>
+          <div class="endpoint-desc">Envia alerta com localização quando há correspondência</div>
+          <div style="margin-top:10px;color:#7a8499">Body: { "missing_id": "...", "found_location": "...", "confidence": 0.95, "contact": "..." }</div>
+        </div>
+
+        <div class="api-endpoint">
+          <span class="method method-get">GET</span><span class="endpoint-url">/api/status</span>
+          <div class="endpoint-desc">Verifica status do servidor e dispositivos ligados</div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title">🧪 Testar API</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-secondary btn-sm" onclick="simulateFaceScan()">Testar Scan Facial</button>
+          <button class="btn btn-secondary btn-sm" onclick="simulateFingerScan()">Testar Impressão Digital</button>
+          <button class="btn btn-success btn-sm" onclick="simulateMatch()">Testar Correspondência</button>
+        </div>
+      </div>
+
+      <!-- PRIVATE PAGE -->
+      <div class="page" id="page-private">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;padding:18px 20px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:14px">
+          <span style="font-size:32px">🔒</span>
+          <div>
+            <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--red);margin-bottom:3px">Área Confidencial — Acesso Restrito</div>
+            <div style="font-size:13px;color:var(--muted)">Apenas visível para autoridades verificadas. Os casos aqui registados NÃO aparecem ao público.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+          <button class="btn btn-danger btn-sm" onclick="openModal('private-publish-modal')">+ Registar Caso Confidencial</button>
+          <button class="btn btn-secondary btn-sm" onclick="togglePrivateFilter('all')">Todos</button>
+          <button class="btn btn-secondary btn-sm" onclick="togglePrivateFilter('police')">Polícia</button>
+          <button class="btn btn-secondary btn-sm" onclick="togglePrivateFilter('hospital')">Hospital</button>
+        </div>
+
+        <div id="private-cards" class="cards-grid"></div>
+        <div id="no-private" style="text-align:center;padding:50px 20px;color:var(--muted)">
+          <div style="font-size:48px;margin-bottom:12px">🔒</div>
+          <p>Nenhum caso confidencial registado ainda.<br>Clica em "Registar Caso Confidencial" para adicionar.</p>
+        </div>
+      </div>
+
+      <!-- AUTHORITY DASHBOARD -->
+      <div class="page" id="page-authority">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;padding:18px 20px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:14px">
+          <span style="font-size:32px">🛡️</span>
+          <div>
+            <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--blue);margin-bottom:3px">Painel de Autoridade</div>
+            <div style="font-size:13px;color:var(--muted)">Gestão de casos públicos e confidenciais, estatísticas e ferramentas exclusivas.</div>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="margin-bottom:24px">
+          <div class="stat-card red">
+            <div class="stat-icon">🔒</div>
+            <div class="stat-label">Casos Confidenciais</div>
+            <div class="stat-value" id="stat-private">0</div>
+            <div class="stat-sub">Não visíveis ao público</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon">👥</div>
+            <div class="stat-label">Casos Públicos</div>
+            <div class="stat-value" id="stat-pub-auth">4</div>
+            <div class="stat-sub">Visíveis a todos</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon">🏥</div>
+            <div class="stat-label">Registados por Hospital</div>
+            <div class="stat-value" id="stat-hosp">0</div>
+            <div class="stat-sub">Esta semana</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon">🚔</div>
+            <div class="stat-label">Registados pela Polícia</div>
+            <div class="stat-value" id="stat-police-count">0</div>
+            <div class="stat-sub">Esta semana</div>
+          </div>
+        </div>
+
+        <div class="section-title">🔄 Ações Rápidas</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px">
+          <button class="btn btn-danger btn-sm" onclick="openModal('private-publish-modal')">🔒 Novo Caso Confidencial</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('publish-modal')">🌐 Novo Caso Público</button>
+          <button class="btn btn-blue btn-sm" onclick="showPage('private');document.getElementById('nav-private').classList.add('active')">Ver Casos Confidenciais</button>
+        </div>
+
+        <div class="section-title">📋 Todos os Casos (Público + Confidencial)</div>
+        <div id="authority-all-cards" class="cards-grid"></div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+
+  <!-- BOTTOM NAV (mobile only) -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="bnav-item active" id="bnav-dashboard" onclick="showPageMobile('dashboard', this)">
+        <span class="bnav-icon">📊</span>
+        Dashboard
+      </button>
+      <button class="bnav-item" id="bnav-missing" onclick="showPageMobile('missing', this)">
+        <span class="bnav-icon">👤</span>
+        Casos
+      </button>
+      <button class="bnav-item" onclick="openModal('publish-modal')">
+        <span class="bnav-icon" style="background:var(--accent);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin-bottom:-2px;font-size:18px">+</span>
+        Publicar
+      </button>
+      <button class="bnav-item" id="bnav-alerts" onclick="showPageMobile('alerts', this)">
+        <span class="bnav-icon">🔔</span>
+        Alertas
+        <span class="bnav-dot"></span>
+      </button>
+      <button class="bnav-item" id="bnav-esp32" onclick="showPageMobile('esp32', this)">
+        <span class="bnav-icon">🤖</span>
+        ESP32
+      </button>
+    </div>
+  </nav>
+</div>
+
+<!-- ── MODALS ── -->
+
+<!-- Publish modal -->
+<div class="modal-overlay" id="publish-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>📢 Publicar Pessoa Desaparecida</h3>
+      <button class="modal-close" onclick="closeModal('publish-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">Clica para seleccionar uma fotografia</div>
+        <img id="upload-preview" alt="preview">
+      </div>
+      <input type="file" id="file-input" accept="image/*" style="display:none" onchange="previewImage(this)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nome completo</label>
+          <input type="text" id="pub-name" placeholder="Ex: Maria Santos">
+        </div>
+        <div class="form-group">
+          <label>Idade</label>
+          <input type="text" id="pub-age" placeholder="Ex: 34 anos">
+        </div>
+        <div class="form-group">
+          <label>Última localização</label>
+          <input type="text" id="pub-location" placeholder="Ex: Lisboa, Benfica">
+        </div>
+        <div class="form-group">
+          <label>Data desaparecimento</label>
+          <input type="text" id="pub-date" placeholder="Ex: 20/04/2025">
+        </div>
+        <div class="form-group form-full">
+          <label>Descrição física</label>
+          <textarea id="pub-desc" placeholder="Altura, peso, características, roupa que vestia..."></textarea>
+        </div>
+        <div class="form-group form-full">
+          <label>Contacto para reportar</label>
+          <input type="tel" id="pub-contact" placeholder="+244 912 345 678">
+        </div>
+        <div class="form-group form-full">
+          <label>Número do BI</label>
+          <input type="text" id="pub-bi-number" placeholder="Ex: 006123456LA041">
+        </div>
+      </div>
+
+      <!-- BI Upload — só visível para autoridades -->
+      <div id="bi-upload-section" style="display:none">
+        <div style="height:1px;background:var(--border);margin:16px 0"></div>
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:12px">
+          🔒 Bilhete de Identidade <span style="color:var(--red);font-size:10px">— Apenas autoridades</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Frente do BI</div>
+            <div class="upload-zone" style="padding:20px 10px;min-height:100px" onclick="document.getElementById('bi-front-input').click()">
+              <div class="upload-icon" id="bi-front-icon" style="font-size:28px">🪪</div>
+              <div class="upload-text" id="bi-front-text" style="font-size:11px">Carregar frente</div>
+              <img id="bi-front-preview" style="width:100%;max-height:120px;object-fit:contain;border-radius:6px;display:none">
+            </div>
+            <input type="file" id="bi-front-input" accept="image/*" style="display:none" onchange="previewBI(this,'front')">
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Verso do BI</div>
+            <div class="upload-zone" style="padding:20px 10px;min-height:100px" onclick="document.getElementById('bi-back-input').click()">
+              <div class="upload-icon" id="bi-back-icon" style="font-size:28px">🪪</div>
+              <div class="upload-text" id="bi-back-text" style="font-size:11px">Carregar verso</div>
+              <img id="bi-back-preview" style="width:100%;max-height:120px;object-fit:contain;border-radius:6px;display:none">
+            </div>
+            <input type="file" id="bi-back-input" accept="image/*" style="display:none" onchange="previewBI(this,'back')">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="publishMissing()" style="flex:1">Publicar agora</button>
+      <button class="btn btn-secondary" onclick="closeModal('publish-modal')" style="flex:0.4">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Match alert modal -->
+<div class="modal-overlay" id="match-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🚨 Correspondência Detectada!</h3>
+      <button class="modal-close" onclick="closeModal('match-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="match-result">
+        <div class="match-avatar">👤</div>
+        <div class="match-info">
+          <div class="match-name" id="match-name">Maria Santos</div>
+          <div class="match-detail" id="match-detail">Desaparecida há 3 dias • Reconhecimento Facial</div>
+          <div class="match-detail" id="match-loc">📍 Hospital de Santa Maria, Lisboa</div>
+        </div>
+        <div class="match-confidence" id="match-conf">94%</div>
+      </div>
+      <div class="map-box">
+        <span style="font-size:36px">🗺️</span>
+        <span>Localização detectada pelo ESP32</span>
+        <span style="font-size:12px;color:var(--muted2)">Hospital de Santa Maria — Urgências</span>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-top:14px;line-height:1.6">⚡ Alerta enviado automaticamente para a família e autoridades. O dispositivo ESP32 registou a correspondência às <strong id="match-time">--:--</strong>.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success" onclick="closeModal('match-modal')" style="flex:1">✅ Confirmar & Notificar</button>
+      <button class="btn btn-secondary" onclick="closeModal('match-modal')" style="flex:0.4">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRIVATE PUBLISH MODAL -->
+<div class="modal-overlay" id="private-publish-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🔒 Registar Caso Confidencial</h3>
+      <button class="modal-close" onclick="closeModal('private-publish-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:12px 14px;margin-bottom:18px;font-size:13px;color:var(--red)">
+        🔒 Este caso é <strong>estritamente confidencial</strong>. Não será visível ao público nem a outros utilizadores sem permissão de autoridade.
+      </div>
+      <div class="upload-zone" id="priv-upload-zone" onclick="document.getElementById('priv-file-input').click()">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">Clica para seleccionar fotografia</div>
+        <img id="priv-upload-preview" alt="preview" style="width:100%;max-height:180px;object-fit:contain;border-radius:8px;display:none">
+      </div>
+      <input type="file" id="priv-file-input" accept="image/*" style="display:none" onchange="previewPrivateImage(this)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nome / Identificação</label>
+          <input type="text" id="priv-name" placeholder="Nome ou desconhecido">
+        </div>
+        <div class="form-group">
+          <label>Idade aproximada</label>
+          <input type="text" id="priv-age" placeholder="Ex: ~30 anos">
+        </div>
+        <div class="form-group">
+          <label>Local onde foi encontrado/detido</label>
+          <input type="text" id="priv-location" placeholder="Ex: Esquadra 3ª Divisão">
+        </div>
+        <div class="form-group">
+          <label>Data da ocorrência</label>
+          <input type="text" id="priv-date" placeholder="DD/MM/AAAA">
+        </div>
+        <div class="form-group">
+          <label>Departamento / Unidade</label>
+          <select id="priv-dept">
+            <option value="police">Polícia / Esquadra</option>
+            <option value="hospital">Hospital / Urgência</option>
+            <option value="forensic">Medicina Legal</option>
+            <option value="border">Guarda Fronteira</option>
+            <option value="other">Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Nível de urgência</label>
+          <select id="priv-urgency">
+            <option value="normal">Normal</option>
+            <option value="urgent">Urgente</option>
+            <option value="critical">Crítico</option>
+          </select>
+        </div>
+        <div class="form-group form-full">
+          <label>Notas internas (confidenciais)</label>
+          <textarea id="priv-notes" placeholder="Informações internas, estado da pessoa, contexto da ocorrência..."></textarea>
+        </div>
+        <div class="form-group form-full">
+          <label>Contacto interno</label>
+          <input type="tel" id="priv-contact" placeholder="Ramal / Telemóvel de serviço">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="publishPrivate()" style="flex:1">🔒 Registar como Confidencial</button>
+      <button class="btn btn-secondary" onclick="closeModal('private-publish-modal')" style="flex:0.4">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SERVER CONFIG MODAL -->
+<div class="modal-overlay" id="server-config-modal">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-head">
+      <h3>🌐 Configurar Servidor</h3>
+      <button class="modal-close" onclick="closeModal('server-config-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(56,130,246,0.08);border:1px solid rgba(56,130,246,0.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--muted);line-height:1.7">
+        💡 Cola aqui o URL do <strong style="color:var(--text)">Ngrok</strong> para ligar o site ao teu servidor Termux de qualquer lugar.
+      </div>
+      <div class="form-group">
+        <label>URL do Servidor (Ngrok ou IP local)</label>
+        <input type="text" id="server-url-input" placeholder="https://abc123.ngrok-free.app" style="font-family:monospace;font-size:13px">
+      </div>
+      <div id="server-test-result" style="font-size:12px;margin-top:8px;display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary btn-sm" onclick="testServerUrl()" style="flex:0.5">🔍 Testar</button>
+      <button class="btn btn-primary" onclick="saveServerUrl()" style="flex:1">Guardar e Ligar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  SERVIDOR LOCAL (Termux / Raspberry Pi)
+//  Detecta automaticamente o servidor na mesma rede
+// ══════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════
+//  URL DO SERVIDOR
+// ══════════════════════════════════════════════
+// URL fixo do servidor Render — muda aqui se mudares de servidor
+const SERVER_URL = (() => {
+  // URL do Render (produção)
+  const RENDER_URL = "https://achados-api-v92u.onrender.com";
+  // Se estiver a correr localmente (Termux/Raspberry Pi)
+  const h = window.location.hostname;
+  if (h === 'localhost' || /^\d+\.\d+\.\d+\.\d+$/.test(h)) {
+    return `http://${h}:5000`;
+  }
+  // Usar URL guardado manualmente ou o Render por defeito
+  return localStorage.getItem('achados_server_url') || RENDER_URL;
+})();
+
+let serverOnline = false;
+
+function openServerConfig() {
+  const saved = localStorage.getItem('achados_server_url') || '';
+  document.getElementById('server-url-input').value = saved;
+  document.getElementById('server-test-result').style.display = 'none';
+  openModal('server-config-modal');
+}
+
+async function testServerUrl() {
+  const url = document.getElementById('server-url-input').value.trim();
+  const res  = document.getElementById('server-test-result');
+  res.style.display = 'block';
+  res.textContent = '⏳ A testar...';
+  res.style.color = 'var(--muted)';
+  try {
+    const r = await fetch(url + '/api/status', { signal: AbortSignal.timeout(5000) });
+    if (r.ok) {
+      const d = await r.json();
+      res.textContent = `✅ Servidor online! ${d.missing_count || 0} casos activos.`;
+      res.style.color = 'var(--green)';
+    } else {
+      res.textContent = '❌ Servidor respondeu com erro ' + r.status;
+      res.style.color = 'var(--red)';
+    }
+  } catch(e) {
+    res.textContent = '❌ Não consegui ligar — verifica o URL e se o Ngrok está activo';
+    res.style.color = 'var(--red)';
+  }
+}
+
+function saveServerUrl() {
+  const url = document.getElementById('server-url-input').value.trim();
+  if (!url) return showToast('⚠️ Insere um URL', '', 'info');
+  localStorage.setItem('achados_server_url', url);
+  location.reload(); // Recarregar com novo URL
+}
+
+async function checkServer() {
+  const badge = document.getElementById('server-badge');
+  if (!SERVER_URL) {
+    if (badge) { badge.textContent = '⚡ Modo Local'; badge.className = 'badge badge-blue'; }
+    return;
+  }
+
+  // Mostrar "a acordar..." enquanto tenta
+  if (badge) { badge.textContent = '⏳ A ligar...'; badge.className = 'badge badge-yellow'; }
+
+  // Tentar até 3 vezes (o Render pode demorar a acordar)
+  for (let tentativa = 1; tentativa <= 3; tentativa++) {
+    try {
+      // Timeout maior na 1ª tentativa para dar tempo ao Render acordar
+      const timeout = tentativa === 1 ? 8000 : tentativa === 2 ? 15000 : 40000;
+      if (badge && tentativa > 1) {
+        badge.textContent = `⏳ A acordar servidor (${tentativa}/3)...`;
+      }
+      const r = await fetch(SERVER_URL + '/api/status', {
+        signal: AbortSignal.timeout(timeout)
+      });
+      if (r.ok) {
+        serverOnline = true;
+        if (badge) { badge.textContent = '● Servidor Online'; badge.className = 'badge badge-green'; }
+        loadServerData();
+        return; // Sucesso — sair do loop
+      }
+    } catch(e) {
+      if (tentativa < 3) {
+        // Aguardar antes de tentar novamente
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
+  }
+
+  // Falhou nas 3 tentativas
+  serverOnline = false;
+  if (badge) {
+    badge.textContent = '● Servidor Offline';
+    badge.className = 'badge badge-red';
+    badge.title = 'Clica para tentar novamente';
+  }
+}
+
+async function fetchBI(personId) {
+  if (!isAuthority() || !SERVER_URL) return;
+  try {
+    const r = await fetch(`${SERVER_URL}/api/missing/${personId}/bi`, {
+      headers: { 'X-User-Role': currentUser?.role || '' }
+    });
+    if (r.ok) {
+      const data = await r.json();
+      // Update person in local array
+      const p = people.find(p => p.id === personId);
+      if (p) {
+        p.bi_number = data.bi_number;
+        p.bi_front  = data.bi_front;
+        p.bi_back   = data.bi_back;
+        renderAll();
+      }
+    }
+  } catch(e) { console.warn('Erro ao carregar BI:', e); }
+}
+
+function resolvePhotoUrl(url) {
+  if (!url) return null;
+  // Base64 — usa directamente
+  if (url.startsWith('data:')) return url;
+  // URL absoluto — usa directamente
+  if (url.startsWith('http')) return url;
+  // URL relativo — prefixar com servidor
+  if (url.startsWith('/uploads/')) return SERVER_URL + url;
+  return url;
+}
+
+async function loadServerData() {
+  if (!serverOnline || !SERVER_URL) return;
+  try {
+    // Carregar pessoas desaparecidas do servidor
+    const r = await fetch(SERVER_URL + '/api/missing');
+    if (r.ok) {
+      const data = await r.json();
+      if (data.persons && data.persons.length > 0) {
+        people = data.persons.map(p => ({
+          id:       p.id,
+          name:     p.name,
+          age:      p.age || '—',
+          location: p.location || '—',
+          date:     p.disappeared_at || (p.created_at ? p.created_at.slice(0,10) : '—'),
+          desc:     p.description || '',
+          contact:  p.contact || '',
+          photoUrl:  resolvePhotoUrl(p.photo_url),
+          bi_number: p.bi_number  || null,
+          bi_front:  resolvePhotoUrl(p.bi_front)  || null,
+          bi_back:   resolvePhotoUrl(p.bi_back)   || null,
+          status:    p.status
+        }));
+        renderAll();
+      }
+    }
+    // Carregar alertas
+    const ra = await fetch(SERVER_URL + '/api/alerts');
+    if (ra.ok) {
+      const adata = await ra.json();
+      if (adata.alerts && adata.alerts.length > 0) {
+        sampleAlerts.splice(0, 0, ...adata.alerts.map(a => ({
+          type: 'match', icon: '🚨',
+          title: `Correspondência — ${a.person_name}`,
+          desc: `${a.method} em ${a.location} (${a.confidence}%)`,
+          time: a.timestamp
+        })));
+        renderAlerts();
+      }
+    }
+  } catch(e) { console.warn('Erro ao carregar dados:', e); }
+}
+
+async function saveToServer(endpoint, data) {
+  if (!serverOnline || !SERVER_URL) return null;
+  try {
+    const r = await fetch(SERVER_URL + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return r.ok ? await r.json() : null;
+  } catch(e) { console.warn('Erro ao guardar:', e); return null; }
+}
+
+// Verificar servidor a cada 10 segundos
+window.addEventListener('load', () => {
+  checkServer();
+  setInterval(checkServer, 10000);
+});
+
+// ── AUTHORITY ROLES & CODES ──
+// Códigos de acesso institucionais (em produção, validar no servidor)
+const AUTHORITY_CODES = {
+  police:   'PSP2025',    // Polícia
+  hospital: 'HOSP2025',  // Hospital
+};
+const AUTHORITY_ROLES = ['police', 'hospital', 'forensic', 'border'];
+
+let privateCases = [];  // casos confidenciais — só autoridades veem
+let uploadedPrivatePhotoUrl = null;
+
+function isAuthority() {
+  return currentUser && AUTHORITY_ROLES.includes(currentUser.role);
+}
+
+function toggleAuthCode(val) {
+  const g = document.getElementById('auth-code-group');
+  g.style.display = (val === 'police' || val === 'hospital') ? '' : 'none';
+}
+
+function applyAuthorityUI() {
+  const auth = isAuthority();
+  // Show/hide private nav items
+  ['nav-private-section','nav-private','nav-authority-dash'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = auth ? '' : 'none';
+  });
+  // Show/hide BI upload section in publish modal
+  const biSection = document.getElementById('bi-upload-section');
+  if (biSection) biSection.style.display = auth ? '' : 'none';
+  // Show private button in topbar
+  const pb = document.getElementById('topbar-priv-btn');
+  if (pb) pb.style.display = auth ? '' : 'none';
+  // Show/hide private button in topbar
+  const pb = document.getElementById('topbar-private-btn');
+  if (pb) pb.style.display = auth ? '' : 'none';
+  // Show authority badge on avatar
+  if (auth) {
+    document.getElementById('sidebar-role').innerHTML =
+      `<span style="color:var(--red)">🔒 ${roleLabel(currentUser.role)}</span>`;
+  }
+}
+
+function roleLabel(r) {
+  const map = { police:'Autoridade Policial', hospital:'Hospital', ngo:'ONG/Voluntário', citizen:'Cidadão', forensic:'Med. Legal', border:'Guarda Fronteira' };
+  return map[r] || r;
+}
+
+// ── MOBILE ──
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+
+function showPageMobile(id, btn) {
+  // Update pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  // Update bottom nav
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  // Update sidebar nav highlight
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const titles = { dashboard:'Dashboard', missing:'Pessoas Desaparecidas', alerts:'Alertas', esp32:'Painel ESP32', matches:'Correspondências', api:'API / Integração' };
+  document.getElementById('page-title').textContent = titles[id] || id;
+}
+
+// ── DATA ──
+const samplePeople = [
+  { id: 1, name: "Maria Santos", age: "34 anos", location: "Lisboa, Benfica", date: "20/04/2025", desc: "1.65m, cabelo castanho, olhos verdes", contact: "+351 912 000 001", photoUrl: "https://randomuser.me/api/portraits/women/44.jpg", status: "active" },
+  { id: 2, name: "João Ferreira", age: "12 anos", location: "Porto, Matosinhos", date: "18/04/2025", desc: "1.40m, cabelo preto, óculos", contact: "+351 912 000 002", photoUrl: "https://randomuser.me/api/portraits/men/32.jpg", status: "active" },
+  { id: 3, name: "Ana Costa", age: "78 anos", location: "Coimbra", date: "15/04/2025", desc: "1.55m, cabelo branco, bengala", contact: "+351 912 000 003", photoUrl: "https://randomuser.me/api/portraits/women/68.jpg", status: "active" },
+  { id: 4, name: "Carlos Mendes", age: "24 anos", location: "Luanda, Angola", date: "24/04/2026", desc: "Cabelo rapado, olhos castanhos, usa lenço colorido", contact: "+244 923 000 004", photoUrl: "data:image/jpeg;base64,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", status: "active" },
+];
+
+const sampleAlerts = [
+  { type: "alert", icon: "🚨", title: "Alerta Urgente — João Ferreira", desc: "Criança desaparecida há mais de 24h. Última localização: Porto.", time: "Há 2 horas" },
+  { type: "match", icon: "✅", title: "Possível correspondência — Ana Costa", desc: "ESP32 #003 detectou semelhança de 87% em Hospital de Coimbra.", time: "Há 5 horas" },
+  { type: "info", icon: "📡", title: "ESP32 #001 ligado", desc: "Dispositivo na Esquadra PSP Lisboa conectado com sucesso.", time: "Há 1 dia" },
+];
+
+let people = [...samplePeople];
+let matches = [];
+let currentUser = null;
+let espConnected = false;
+let scanCount = 0;
+let uploadedPhotoUrl  = null;
+let uploadedBiFront   = null;
+let uploadedBiBack    = null;
+
+// ── AUTH ──
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register'));
+  });
+  document.getElementById('login-form').style.display = tab==='login' ? '' : 'none';
+  document.getElementById('register-form').style.display = tab==='register' ? '' : 'none';
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  if (!email || !pass) return showToast('⚠️ Preenche todos os campos', '', 'info');
+
+  // Tentar login no servidor
+  if (SERVER_URL) {
+    try {
+      showToast('⏳ A ligar ao servidor...', 'O servidor pode demorar até 50 segundos a acordar.', 'info');
+      const r = await fetch(SERVER_URL + '/api/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({email, password: pass}),
+        signal: AbortSignal.timeout(55000)  // 55 segundos para o Render acordar
+      });
+      const data = await r.json();
+      if (data.success) {
+        currentUser = data.user;
+        launchApp();
+        loadServerData();
+        return;
+      } else {
+        return showToast('❌ ' + (data.error || 'Credenciais inválidas'), '', 'alert');
+      }
+    } catch(e) { console.warn('Servidor indisponível, modo offline'); }
+  }
+
+  // Modo offline — aceita qualquer login
+  const adminEmails = ['admin@achados.pt'];
+  currentUser = {
+    id:    'local_' + Date.now(),
+    name:  email.split('@')[0],
+    email: email,
+    role:  adminEmails.includes(email.toLowerCase()) ? 'admin' : 'citizen'
+  };
+  launchApp();
+  showToast('⚠️ Modo offline', 'Servidor não disponível — dados locais apenas.', 'info');
+}
+
+async function doRegister() {
+  const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass  = document.getElementById('reg-pass') ? document.getElementById('reg-pass').value : 'demo123';
+  if (!name || !email) return showToast('⚠️ Preenche todos os campos', '', 'info');
+
+  // Tentar registar no servidor
+  if (SERVER_URL) {
+    try {
+      const r = await fetch(SERVER_URL + '/api/auth/register', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({name, email, password: pass, role:'citizen'})
+      });
+      const data = await r.json();
+      if (data.success) {
+        currentUser = data.user;
+        showToast('✅ Conta criada!', 'Bem-vindo/a à plataforma.', 'match');
+        launchApp();
+        return;
+      } else {
+        return showToast('❌ ' + (data.error || 'Erro ao registar'), '', 'alert');
+      }
+    } catch(e) { console.warn('Offline'); }
+  }
+  // Offline
+  currentUser = { name, email, role: 'citizen' };
+  launchApp();
+}
+
+function launchApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('sidebar-name').textContent = currentUser.name;
+  document.getElementById('sidebar-avatar').textContent = currentUser.name[0].toUpperCase();
+  const roles = { citizen:'Cidadão', police:'Autoridade', hospital:'Hospital', ngo:'ONG/Voluntário' };
+  document.getElementById('sidebar-role').textContent = roles[currentUser.role] || currentUser.role;
+  renderAll();
+}
+
+function doLogout() {
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+// ── PAGES ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  const titles = { dashboard:'Dashboard', missing:'Pessoas Desaparecidas', alerts:'Alertas', esp32:'Painel ESP32', matches:'Correspondências', api:'API / Integração' };
+  document.getElementById('page-title').textContent = titles[id] || id;
+  // Close sidebar on mobile
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ── RENDER ──
+function renderAll() {
+  renderCards('dash-recent-cards', people.slice(0,4));
+  renderCards('all-cards', people);
+  renderAlerts();
+  renderMatches();
+}
+
+function renderCards(containerId, list) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+
+  const authority = isAuthority() || isAdmin();
+
+  c.innerHTML = '';
+  list.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'person-card';
+
+    // Photo
+    let photoInner = '';
+    if (p.photoUrl) {
+      photoInner = '<img src="' + p.photoUrl + '" alt="' + p.name.replace(/"/g,"") + '" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none'">';
+    }
+    photoInner += '<span style="font-size:70px;display:' + (p.photoUrl ? 'none' : 'flex') + ';width:100%;height:100%;align-items:center;justify-content:center;">👤</span>';
+    photoInner += '<div class="photo-status"><span class="badge badge-orange">Procurado</span></div>';
+
+    // BI section — só autoridades
+    let biHTML = '';
+    if (authority && (p.bi_number || p.bi_front || p.bi_back)) {
+      biHTML = '<div style="padding:8px 16px;border-top:1px solid var(--border);background:rgba(239,68,68,0.04)">';
+      biHTML += '<div style="font-size:10px;font-weight:700;color:var(--red);margin-bottom:4px">🔒 BI DISPONÍVEL</div>';
+      if (p.bi_number) biHTML += '<div style="font-size:11px;color:var(--muted)">Nº: ' + p.bi_number + '</div>';
+      biHTML += '</div>';
+    }
+
+    // Actions
+    const biBtn = (authority && (p.bi_front || p.bi_back || p.bi_number))
+      ? '<button class="btn btn-secondary btn-sm" style="color:var(--yellow)" id="bibtn_' + p.id + '">🪪 BI</button>'
+      : '';
+
+    card.innerHTML =
+      '<div class="person-photo" style="position:relative;overflow:hidden">' + photoInner + '</div>' +
+      '<div class="person-info">' +
+        '<div class="person-name">' + p.name + '</div>' +
+        '<div class="person-meta">' +
+          '🎂 ' + (p.age||'—') + '<br>' +
+          '📍 ' + (p.location||'—') + '<br>' +
+          '📅 ' + (p.date||'—') +
+        '</div>' +
+      '</div>' +
+      biHTML +
+      '<div class="person-actions">' +
+        '<button class="btn btn-secondary btn-sm" onclick="shareCase('' + p.id + '')">Partilhar</button>' +
+        biBtn +
+        '<button class="btn btn-primary btn-sm" onclick="openContact('' + (p.contact||'').replace(/'/g,'') + '')">Contactar</button>' +
+      '</div>';
+
+    // Add BI button event listener after adding to DOM
+    c.appendChild(card);
+
+    if (authority && (p.bi_front || p.bi_back || p.bi_number)) {
+      const btn = document.getElementById('bibtn_' + p.id);
+      if (btn) btn.addEventListener('click', () => viewBI(p));
+    }
+  });
+}
+
+
+function renderAlerts() {
+  const list = sampleAlerts;
+  ['dash-alerts','alerts-list'].forEach(id => {
+    const c = document.getElementById(id);
+    if (!c) return;
+    c.innerHTML = list.map(a => `
+      <div class="alert-card ${a.type}">
+        <div class="alert-icon">${a.icon}</div>
+        <div class="alert-content">
+          <div class="alert-title">${a.title}</div>
+          <div class="alert-desc">${a.desc}</div>
+          <div class="alert-time">${a.time}</div>
+        </div>
+      </div>
+    `).join('');
+  });
+}
+
+function renderMatches() {
+  const c = document.getElementById('matches-list');
+  const none = document.getElementById('no-matches');
+  if (matches.length === 0) { none.style.display = 'block'; c.innerHTML = ''; return; }
+  none.style.display = 'none';
+  c.innerHTML = matches.map(m => `
+    <div class="match-result">
+      <div class="match-avatar">👤</div>
+      <div class="match-info">
+        <div class="match-name">${m.name}</div>
+        <div class="match-detail">${m.type} • ${m.device}</div>
+        <div class="match-detail">📍 ${m.location}</div>
+        <div class="match-detail" style="font-size:11px;color:var(--muted2)">${m.time}</div>
+      </div>
+      <div class="match-confidence">${m.confidence}%</div>
+    </div>
+  `).join('');
+}
+
+function filterCards(q) {
+  const filtered = q ? people.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || p.location.toLowerCase().includes(q.toLowerCase())) : people;
+  renderCards('all-cards', filtered);
+}
+
+// ── ESP32 SIMULATION ──
+function simulateESPConnect() {
+  espConnected = true;
+  const dot = document.getElementById('esp-dot');
+  dot.classList.add('connected');
+  document.getElementById('esp-status-badge').textContent = '● ESP32 Ligado';
+  document.getElementById('esp-status-badge').className = 'badge badge-green';
+  document.getElementById('esp-ip').textContent = 'IP: 192.168.1.42';
+  document.getElementById('esp-connect-btn').textContent = '✅ Ligado';
+  const now = new Date().toLocaleTimeString('pt-PT');
+  addLog(`[${now}]`, 'ESP32 conectado — IP: 192.168.1.42', 'ok');
+  addLog(`[${now}]`, 'Módulo facial: OK  |  Sensor digital: OK', 'ok');
+  document.getElementById('dash-esp-status').innerHTML = `
+    <span style="font-size:36px">✅</span>
+    <div>
+      <div class="sensor-name" style="color:var(--green)">Dispositivo Ligado</div>
+      <div class="sensor-status">IP: 192.168.1.42 • Aguardando scans</div>
+    </div>
+  `;
+  showToast('🤖 ESP32 Ligado!', 'Dispositivo conectado com sucesso.', 'match');
+}
+
+function simulateFaceScan() {
+  if (!espConnected) { simulateESPConnect(); setTimeout(simulateFaceScan, 1500); return; }
+  const box = document.getElementById('sensor-face');
+  box.classList.add('scanning');
+  document.getElementById('face-status').textContent = 'A capturar...';
+  const now = new Date().toLocaleTimeString('pt-PT');
+  addLog(`[${now}]`, 'Iniciando reconhecimento facial...', 'info');
+  scanCount++;
+  document.getElementById('stat-scans').textContent = (1200 + scanCount) > 999 ? `${((1200+scanCount)/1000).toFixed(1)}k` : 1200+scanCount;
+
+  setTimeout(() => {
+    box.classList.remove('scanning');
+    box.classList.add('active');
+    document.getElementById('face-status').textContent = 'Scan concluído';
+    addLog(`[${now}]`, 'Face detectada. Comparando com base de dados...', 'warn');
+  }, 2000);
+}
+
+function simulateFingerScan() {
+  if (!espConnected) { simulateESPConnect(); setTimeout(simulateFingerScan, 1500); return; }
+  const box = document.getElementById('sensor-finger');
+  box.classList.add('scanning');
+  document.getElementById('finger-status').textContent = 'A ler...';
+  const now = new Date().toLocaleTimeString('pt-PT');
+  addLog(`[${now}]`, 'Sensor de impressão digital activo...', 'info');
+
+  setTimeout(() => {
+    box.classList.remove('scanning');
+    box.classList.add('active');
+    document.getElementById('finger-status').textContent = 'Leitura concluída';
+    addLog(`[${now}]`, 'Impressão digital capturada com sucesso.', 'ok');
+  }, 2000);
+}
+
+function simulateMatch() {
+  if (!espConnected) simulateESPConnect();
+  const now = new Date().toLocaleTimeString('pt-PT');
+  const person = people[Math.floor(Math.random() * people.length)];
+  const locations = ['Esquadra PSP Lisboa', 'Hospital de Santa Maria', 'Hospital de São João, Porto', 'GNR Coimbra', 'Centro de Saúde Faro'];
+  const loc = locations[Math.floor(Math.random() * locations.length)];
+  const conf = Math.floor(Math.random() * 15) + 82;
+
+  addLog(`[${now}]`, `⚡ CORRESPONDÊNCIA ENCONTRADA — ${person.name}`, 'ok');
+  addLog(`[${now}]`, `Local: ${loc} | Confiança: ${conf}%`, 'ok');
+
+  // Match modal
+  document.getElementById('match-name').textContent = person.name;
+  document.getElementById('match-detail').textContent = `Desaparecido/a há ${Math.floor(Math.random()*10)+1} dias • Reconhecimento Facial`;
+  document.getElementById('match-loc').textContent = `📍 ${loc}`;
+  document.getElementById('match-conf').textContent = `${conf}%`;
+  document.getElementById('match-time').textContent = now;
+  openModal('match-modal');
+
+  // Add to matches list
+  matches.unshift({ name: person.name, type: 'Reconhecimento Facial', device: 'ESP32 #001', location: loc, confidence: conf, time: `Hoje às ${now}` });
+  renderMatches();
+  document.getElementById('alert-badge').textContent = parseInt(document.getElementById('alert-badge').textContent) + 1;
+
+  showToast(`🚨 Correspondência! ${person.name}`, `Detectado/a em ${loc} com ${conf}% de confiança.`, 'alert');
+
+  // Add to alerts
+  sampleAlerts.unshift({ type: 'match', icon: '🚨', title: `CORRESPONDÊNCIA — ${person.name}`, desc: `ESP32 detectou ${conf}% de semelhança em ${loc}.`, time: `Há momentos` });
+  renderAlerts();
+}
+
+function addLog(time, msg, type) {
+  const log = document.getElementById('esp-log');
+  const div = document.createElement('div');
+  div.className = 'log-line';
+  div.innerHTML = `<span class="log-time">${time}</span> <span class="log-${type}">${msg}</span>`;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+// ── MODAL ──
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  // Mostrar secção BI apenas para autoridades
+  if (id === 'publish-modal') {
+    const s1 = document.getElementById('bi-upload-section');
+    if (s1) s1.style.display = isAuthority() || isAdmin() ? '' : 'none';
+    const s2 = document.getElementById('bi-section');
+    if (s2) s2.style.display = isAuthority() || isAdmin() ? '' : 'none';
+  }
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── PUBLISH ──
+async function publishMissing() {
+  const name = document.getElementById('pub-name').value;
+  const age = document.getElementById('pub-age').value;
+  const location = document.getElementById('pub-location').value;
+  const date = document.getElementById('pub-date').value;
+  const desc = document.getElementById('pub-desc').value;
+  const contact = document.getElementById('pub-contact').value;
+  if (!name || !age || !location) return showToast('⚠️ Preenche pelo menos nome, idade e localização', '', 'info');
+  const biNumber = document.getElementById('pub-bi-number')?.value?.trim() || '';
+  const newPerson = {
+    id: Date.now(), name, age, location,
+    date: date || new Date().toLocaleDateString('pt-PT'),
+    desc, contact,
+    photoUrl:  uploadedPhotoUrl || null,
+    bi_number: biNumber || null,
+    bi_front:  uploadedBiFront  || null,
+    bi_back:   uploadedBiBack   || null,
+    status: 'active'
+  };
+  // Tentar guardar no servidor
+  if (serverOnline) {
+    const saved = await saveToServer('/api/missing', {
+      name, age, location, date, description: desc, contact,
+      photo_base64: uploadedPhotoUrl
+    });
+    if (saved) {
+      if (saved.id) newPerson.id = saved.id;
+      if (saved.photo_url) newPerson.photoUrl = resolvePhotoUrl(saved.photo_url);
+    }
+  }
+
+  people.unshift(newPerson);
+  renderAll();
+  closeModal('publish-modal');
+  showToast('✅ Publicado!', `${name} adicionado à base de dados.`, 'match');
+  document.getElementById('stat-active').textContent = people.length;
+  // Clear form
+  ['pub-name','pub-age','pub-location','pub-date','pub-desc','pub-contact'].forEach(id => document.getElementById(id).value = '');
+  // Reset BI
+  uploadedBIFront = null; uploadedBIBack = null;
+  ['bi-front-preview','bi-back-preview'].forEach(id => { const e=document.getElementById(id); if(e){e.style.display='none';e.src='';} });
+  ['bi-front-icon','bi-back-icon','bi-front-text','bi-back-text'].forEach(id => { const e=document.getElementById(id); if(e) e.style.display=''; });
+  if(document.getElementById('pub-bi-number')) document.getElementById('pub-bi-number').value='';
+  if(document.getElementById('bi-front-input')) document.getElementById('bi-front-input').value='';
+  if(document.getElementById('bi-back-input')) document.getElementById('bi-back-input').value='';
+  uploadedPhotoUrl = null;
+  uploadedBiFront  = null;
+  uploadedBiBack   = null;
+  document.getElementById('upload-preview').style.display = 'none';
+  // Reset BI previews
+  ['bi-front-preview','bi-back-preview'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  ['bi-front-icon','bi-back-icon'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = '';
+  });
+  ['bi-front-text','bi-back-text'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = '';
+  });
+  const biNum = document.getElementById('pub-bi-number');
+  if (biNum) biNum.value = '';
+  document.getElementById('upload-zone').querySelector('.upload-icon').style.display = '';
+  document.getElementById('upload-zone').querySelector('.upload-text').style.display = '';
+}
+
+// ── PHOTO ──
+function previewBI(input, side) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const data = e.target.result;
+      if (side === 'front') {
+        uploadedBiFront = data;
+        document.getElementById('bi-front-preview').src = data;
+        document.getElementById('bi-front-preview').style.display = 'block';
+        document.getElementById('bi-front-icon').style.display = 'none';
+        document.getElementById('bi-front-text').style.display = 'none';
+      } else {
+        uploadedBiBack = data;
+        document.getElementById('bi-back-preview').src = data;
+        document.getElementById('bi-back-preview').style.display = 'block';
+        document.getElementById('bi-back-icon').style.display = 'none';
+        document.getElementById('bi-back-text').style.display = 'none';
+      }
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function previewImage(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      uploadedPhotoUrl = e.target.result;
+      const prev = document.getElementById('upload-preview');
+      prev.src = e.target.result;
+      prev.style.display = 'block';
+      document.getElementById('upload-zone').querySelector('.upload-icon').style.display = 'none';
+      document.getElementById('upload-zone').querySelector('.upload-text').style.display = 'none';
+      document.getElementById('upload-zone').classList.add('has-image');
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// ── TOAST ──
+function showToast(title, desc, type='info') {
+  const container = document.getElementById('toast');
+  const el = document.createElement('div');
+  el.className = `toast-item toast-${type}`;
+  const icons = { match:'✅', alert:'🚨', info:'ℹ️' };
+  el.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ️'}</span><div><div class="toast-title">${title}</div>${desc ? `<div class="toast-desc">${desc}</div>` : ''}</div>`;
+  container.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(60px)'; el.style.transition='all 0.4s'; setTimeout(()=>el.remove(),400); }, 4000);
+}
+
+// ── BI VIEWER ──
+function viewBI(personOrId) {
+  // Aceita tanto um objecto pessoa como um ID
+  const p = (typeof personOrId === 'object') 
+    ? personOrId 
+    : (people.find(x => x.id == personOrId) || privateCases.find(x => x.id == personOrId));
+  if (!p) return showToast('⚠️ Pessoa não encontrada', '', 'info');
+  const existing = document.getElementById('bi-view-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'bi-view-modal';
+  modal.className = 'modal-overlay open';
+  let bodyHTML = '<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:var(--red)">🔒 Informação confidencial</div>';
+  if (p.bi_number) bodyHTML += '<div style="margin-bottom:14px;padding:10px 14px;background:var(--bg2);border-radius:8px;font-family:monospace;font-size:14px">Nº BI: <strong>' + p.bi_number + '</strong></div>';
+  bodyHTML += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+  if (p.bi_front) bodyHTML += '<div><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700">FRENTE</div><img src="' + resolvePhotoUrl(p.bi_front) + '" style="width:100%;border-radius:8px;border:1px solid var(--border)"></div>';
+  if (p.bi_back)  bodyHTML += '<div><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700">VERSO</div><img src="'  + resolvePhotoUrl(p.bi_back)  + '" style="width:100%;border-radius:8px;border:1px solid var(--border)"></div>';
+  bodyHTML += '</div>';
+  if (!p.bi_front && !p.bi_back) bodyHTML += '<div style="text-align:center;color:var(--muted);padding:20px">Sem imagens do BI</div>';
+  modal.innerHTML = '<div class="modal" style="max-width:500px"><div class="modal-head"><h3>🪪 BI — ' + p.name + '</h3><button class="modal-close" onclick="document.getElementById('bi-view-modal').remove()">✕</button></div><div class="modal-body">' + bodyHTML + '</div></div>';
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+}
+
+// ── UTILS ──
+function shareCase(id) { showToast('🔗 Link copiado!', 'Partilha o caso com alguém que possa ajudar.', 'info'); }
+function openContact(contact) { showToast(`📞 Contacto: ${contact}`, 'Liga para reportar informações.', 'info'); }
+
+// ── CLOSE MODAL ON OVERLAY CLICK ──
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
